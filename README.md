@@ -1,75 +1,78 @@
-## Keybinds
+# Keybinds
 
----------------------------------------------------------------
- General Editor & Text
----------------------------------------------------------------
-  n            (n) : Next search result (centered)
-  N            (n) : Previous search result (centered)
-  <C-d>        (n) : Half page down (centered)
-  <C-u>        (n) : Half page up (centered)
-  >            (v) : Indent selection and reselect
-  <            (v) : Outdent selection and reselect
-  J            (n) : Join lines (keep cursor position)
-  J            (v) : Move selection down
-  K            (v) : Move selection up
-  p            (v) : Paste without yanking
-  s            (n) : Change line without yanking
-  s            (v) : Change selection without yanking
-  dd           (n) : Delete line (with highlight)
-  <leader>s    (n) : Substitute word under cursor
+## General Editor & Text
 
----------------------------------------------------------------
- Window & Buffer Management
----------------------------------------------------------------
-  <C-h>        (n) : Move window to far left
-  <C-l>        (n) : Move window to far right
-  <leader>bn   (n) : Next buffer
-  <leader>bp   (n) : Previous buffer
-  <leader>v    (n) : Vertical split
-  <leader>w    (n) : Move split focus
-  <leader>c    (n) : Close split
-  <C-Down>     (n) : Decrease split height
-  <C-Left>     (n) : Decrease split width
-  <C-Right>    (n) : Increase split width
+| Key | Mode | Action |
+| --- | --- | --- |
+| `n` | Normal | Next search result (centered) |
+| `N` | Normal | Previous search result (centered) |
+| `<C-d>` | Normal | Half page down (centered) |
+| `<C-u>` | Normal | Half page up (centered) |
+| `>` | Visual | Indent selection and reselect |
+| `<` | Visual | Outdent selection and reselect |
+| `J` | Normal | Join lines (keep cursor position) |
+| `J` | Visual | Move selection down |
+| `K` | Visual | Move selection up |
+| `p` | Visual | Paste without yanking |
+| `s` | Normal | Change line without yanking |
+| `s` | Visual | Change selection without yanking |
+| `dd` | Normal | Delete line (with highlight) |
+| `<leader>s` | Normal | Substitute word under cursor |
 
----------------------------------------------------------------
- File & Project Navigation
----------------------------------------------------------------
-  <C-n>        (n) : Toggle NvimTree file explorer
-  <leader>e    (n) : Toggle Snacks file explorer
-  <leader>gd   (n) : [Diffview] Open Diffview
-  <leader>ff   (n) : [Telescope] Find files
-  <leader>fg   (n) : [Telescope] Live grep
-  <leader>fb   (n) : [Telescope] Find buffers
-  <leader>rc   (n) : Edit config (init.lua)
-  <leader>t    (n) : Insert template for filetype
+## Window & Buffer Management
 
----------------------------------------------------------------
- Telescope (Search)
----------------------------------------------------------------
-  <leader><space> (n) : Search workspace symbols (LSP)
-  <leader>sf   (n) : Search Functions (LSP)
-  <leader>sw   (n) : Grep word under cursor
-  <leader>sd   (n) : Search diagnostics
-  <leader>sh   (n) : Search help tags
+| Key | Mode | Action |
+| --- | --- | --- |
+| `<C-h>` | Normal | Move window to far left |
+| `<C-l>` | Normal | Move window to far right |
+| `<leader>bn` | Normal | Next buffer |
+| `<leader>bp` | Normal | Previous buffer |
+| `<leader>v` | Normal | Vertical split |
+| `<leader>w` | Normal | Move split focus |
+| `<leader>c` | Normal | Close split |
+| `<C-Down>` | Normal | Decrease split height |
+| `<C-Left>` | Normal | Decrease split width |
+| `<C-Right>` | Normal | Increase split width |
 
----------------------------------------------------------------
- LSP & Code (Active in code buffers)
----------------------------------------------------------------
-  gd           (n) : Go to Definition
-  K            (n) : Hover documentation
-  <leader>la   (n) : Code Actions
-  <leader>ca   (n) : Code Actions
-  <leader>rn   (n) : Rename symbol
-  <leader>lr   (n) : Rename symbol
-  <leader>ld   (n) : Go to Definition
-  <leader>lh   (n) : Hover Docs
-  <leader>li   (n) : Go to Implementation
-  <leader>lt   (n) : Type Definition
-  <leader>vr   (n) : View References
-  <leader>vws  (n) : View Workspace Symbols
-  <leader>vd   (n) : Show diagnostic in float
-  <leader>lf   (n) : Format buffer (LSP)
-  <C-h>        (i) : Signature Help (in insert mode)
+## File & Project Navigation
 
----------------------------------------------------------------
+| Key | Mode | Action |
+| --- | --- | --- |
+| `<C-n>` | Normal | Toggle NvimTree file explorer |
+| `<leader>e` | Normal | Toggle Snacks file explorer |
+| `<leader>gd` | Normal | [Diffview] Open Diffview |
+| `<leader>ff` | Normal | [Telescope] Find files |
+| `<leader>fg` | Normal | [Telescope] Live grep |
+| `<leader>fb` | Normal | [Telescope] Find buffers |
+| `<leader>rc` | Normal | Edit config (init.lua) |
+| `<leader>t` | Normal | Insert template for filetype |
+
+## Telescope (Search)
+
+| Key | Mode | Action |
+| --- | --- | --- |
+| `<leader><space>` | Normal | Search workspace symbols (LSP) |
+| `<leader>sf` | Normal | Search Functions (LSP) |
+| `<leader>sw` | Normal | Grep word under cursor |
+| `<leader>sd` | Normal | Search diagnostics |
+| `<leader>sh` | Normal | Search help tags |
+
+## LSP & Code (Active in code buffers)
+
+| Key | Mode | Action |
+| --- | --- | --- |
+| `gd` | Normal | Go to Definition |
+| `K` | Normal | Hover documentation |
+| `<leader>la` | Normal | Code Actions |
+| `<leader>ca` | Normal | Code Actions |
+| `<leader>rn` | Normal | Rename symbol |
+| `<leader>lr` | Normal | Rename symbol |
+| `<leader>ld` | Normal | Go to Definition |
+| `<leader>lh` | Normal | Hover Docs |
+| `<leader>li` | Normal | Go to Implementation |
+| `<leader>lt` | Normal | Type Definition |
+| `<leader>vr` | Normal | View References |
+| `<leader>vws` | Normal | View Workspace Symbols |
+| `<leader>vd` | Normal | Show diagnostic in float |
+| `<leader>lf` | Normal | Format buffer (LSP) |
+| `<C-h>` | Insert | Signature Help (in insert mode) |
