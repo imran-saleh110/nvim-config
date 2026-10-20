@@ -36,7 +36,9 @@ vim.o.incsearch = true  -- Show matches as you type
 -- ----------------------------
 -- Visual Settings
 -- ----------------------------
-
+vim.o.wrap = true
+vim.o.linebreak = true
+vim.o.list = false
 vim.o.termguicolors = true
 vim.o.signcolumn = 'yes'                        -- Always show sign column
 vim.o.showmatch = true                          -- Highlight matching brackets
