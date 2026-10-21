@@ -131,6 +131,7 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]])
 -- ----------------------------
 
 require("build")
+require("curly_braces").setup()
 
 vim.keymap.set('n', '<leader>rc', '<Cmd>e ~/.config/nvim/init.lua<CR>', { desc = 'Edit config' })
 
