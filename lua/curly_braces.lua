@@ -1,10 +1,11 @@
--- Curly brace completion with block auto indentation.
+-- Curly brace completion.
 --
 --   * typing `{` inserts `{}` and keeps the cursor between the braces
---   * pressing <CR> between a pair of braces expands them into an indented block
 --   * typing `}` on an otherwise blank line re-indents it to match its opening brace
 --
 -- Only curly braces are handled, brackets and quotes are left untouched.
+-- The plugin never inserts indentation of its own, the editor's own
+-- autoindent takes care of that.
 --
 -- Key presses are noticed with |vim.on_key()|, but the buffer is only touched
 -- once the editor went idle again.  Doing it right away would place the text
@@ -26,7 +27,6 @@ end
 
 local defaults = {
 	enabled = true, -- master switch
-	auto_indent = true, -- expand braces over several lines when pressing <CR>
 	dedent_closing = true, -- re-indent a typed `}` to match its opening `{`
 	exclude_filetypes = {}, -- filetypes where the plugin stays inert
 }
@@ -34,7 +34,7 @@ local defaults = {
 local opts = vim.deepcopy(defaults)
 
 -- work collected from key presses, applied once the editor is idle
-local pending = { open = false, close = false, enter = false }
+local pending = { open = false, close = false }
 local pending_buf = nil
 local scheduled = false
 local ns_id = nil
@@ -195,19 +195,6 @@ end
 -- helpers
 -- ---------------------------------------------------------------------------
 
----The string used for one level of indentation.
----@return string
-local function indent_unit()
-	local width = vim.fn.shiftwidth()
-	if width == 0 then
-		width = vim.bo.tabstop
-	end
-	if vim.bo.expandtab then
-		return string.rep(" ", width)
-	end
-	return "\t"
-end
-
 ---The indent of the line that holds the brace opening the block closed at the
 ---given spot.
 ---@param row integer zero based row
@@ -235,16 +222,6 @@ local function matching_open_brace_indent(row, col)
 	end
 
 	return nil
-end
-
----Tells whether a completion menu is open, in which case <CR> belongs to it.
----@return boolean
-local function completion_visible()
-	local ok, cmp = pcall(require, "cmp")
-	if ok and type(cmp) == "table" and type(cmp.visible) == "function" and cmp.visible() then
-		return true
-	end
-	return vim.fn.pumvisible() == 1
 end
 
 ---@param row integer one based row
@@ -321,61 +298,6 @@ local function close_brace()
 	vim.api.nvim_win_set_cursor(0, { row, #indent + 1 })
 end
 
----Expands the braces around the cursor into an indented block.
-local function enter()
-	if not opts.auto_indent then
-		return
-	end
-
-	local row, col, line = current_line()
-	log(string.format("  enter row=%d col=%d line=%s", row, col, vim.inspect(line)))
-	local after = line:sub(col + 1)
-
-	-- the closing brace sits right behind the cursor
-	if after:sub(1, 1) == "}" then
-		local indent = matching_open_brace_indent(row - 1, col)
-		if not indent then
-			return
-		end
-
-		local head = line:sub(1, col)
-		local content = indent .. indent_unit()
-		vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, #line, {
-			content .. head,
-			indent .. after,
-		})
-		vim.api.nvim_win_set_cursor(0, { row, #content + #head })
-		return
-	end
-
-	-- the closing brace already sits on its own line
-	local below = get_line(row + 1)
-	if not below then
-		return
-	end
-
-	local spaces = below:match("^%s*")
-	local rest = below:sub(#spaces + 1)
-	if rest:sub(1, 1) ~= "}" then
-		return
-	end
-
-	local own = line:match("^(%s*)") or ""
-	if own ~= "" and line:sub(#own + 1) ~= "" then
-		return
-	end
-
-	local indent = matching_open_brace_indent(row, #own)
-	if not indent then
-		return
-	end
-
-	local content = indent .. indent_unit()
-	vim.api.nvim_buf_set_text(0, row - 1, 0, row - 1, #line, { content })
-	vim.api.nvim_buf_set_text(0, row, 0, row, #below, { indent .. rest })
-	vim.api.nvim_win_set_cursor(0, { row, #content })
-end
-
 -- ---------------------------------------------------------------------------
 -- scheduling
 -- ---------------------------------------------------------------------------
@@ -383,11 +305,11 @@ end
 local function apply_pending()
 	scheduled = false
 
-	local open, close, retype = pending.open, pending.close, pending.enter
-	pending.open, pending.close, pending.enter = false, false, false
+	local open, close = pending.open, pending.close
+	pending.open, pending.close = false, false
 
-	log(string.format("apply_pending open=%s close=%s enter=%s mode=%s", tostring(open), tostring(close), tostring(retype), vim.fn.mode()))
-	if not (open or close or retype) then
+	log(string.format("apply_pending open=%s close=%s mode=%s", tostring(open), tostring(close), vim.fn.mode()))
+	if not (open or close) then
 		return
 	end
 	if vim.api.nvim_get_current_buf() ~= pending_buf then
@@ -404,9 +326,6 @@ local function apply_pending()
 	end
 	if close then
 		close_brace()
-	end
-	if retype then
-		enter()
 	end
 end
 
@@ -426,7 +345,7 @@ end
 ---@param typed string the key as it was typed
 ---@return string|nil
 local function on_key(key, typed)
-	if typed ~= "{" and typed ~= "}" and typed ~= "\r" then
+	if typed ~= "{" and typed ~= "}" then
 		return nil
 	end
 	log(string.format("on_key typed=%q key=%q mode=%s", typed, key, vim.fn.mode()))
@@ -442,14 +361,8 @@ local function on_key(key, typed)
 
 	if typed == "{" then
 		pending.open = true
-	elseif typed == "}" then
-		pending.close = true
 	else
-		-- <CR> belongs to the completion menu while it is open
-		if completion_visible() then
-			return nil
-		end
-		pending.enter = true
+		pending.close = true
 	end
 
 	pending_buf = vim.api.nvim_get_current_buf()
