@@ -525,12 +525,6 @@ vim.lsp.config("*", {
 -- plugins
 -- ----------------------------
 
--- sleuth
-vim.pack.add({
-	{ src = "https://github.com/tpope/vim-sleuth" },
-})
-
-
 -- nvim-notify
 vim.pack.add({
 	{ src = "https://github.com/rcarriga/nvim-notify" },
